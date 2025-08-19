@@ -1,0 +1,2 @@
+- <a href="?template=default.md">default</a>
+- <a href="?template=release.md">release</a>
