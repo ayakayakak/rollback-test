@@ -1,2 +1,2 @@
-- [default PR](../default.md)
-- [release PR](../release.md)
+- [default PR](./default.md)
+- [release PR](./release.md)
