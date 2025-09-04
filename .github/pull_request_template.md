@@ -1,2 +1,2 @@
 - <a href="?expand=1&template=default.md">default PR</a>
-- <a href="?title=(本番リリース)&expand=1&template=release.md">release PR</a>
+- <a href="?title=(本番リリース)%20&expand=1&template=release.md">release PR</a>
