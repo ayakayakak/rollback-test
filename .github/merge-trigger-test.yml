@@ -1,0 +1,45 @@
+name: Merge Trigger Test
+
+# main への push で走る。PR のマージは main にコミットを積む操作なので、
+# これが発火するかどうかがこのファイルで確かめたいこと。
+on:
+  push:
+    branches:
+      - main
+  # 比較用。Actions のページから手動でも起動できるようにしておく
+  workflow_dispatch:
+
+jobs:
+  report:
+    name: Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # マージコミットかどうかを親の数で見るため 1 つでは足りない
+          fetch-depth: 2
+
+      - name: Report trigger
+        # ${{ }} を run: に直接埋めるとコミットメッセージ経由でスクリプトを
+        # 差し込まれうるので、env: に渡してシェル変数として読む
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          echo "event_name   : $EVENT_NAME"
+          echo "ref          : $REF"
+          echo "sha          : $SHA"
+          echo "actor        : $ACTOR"
+          echo "workflow_ref : $WORKFLOW_REF"
+          echo
+          echo "--- コミットメッセージ ---"
+          git log -1 --pretty=%B
+          echo "--- 親コミット（2 つ並べばマージコミット）---"
+          git log -1 --pretty=%P
+          echo
+          echo "--- このコミットに workflow ファイルが入っているか ---"
+          git ls-tree -r --name-only HEAD -- .github/workflows
